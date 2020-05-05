@@ -11,8 +11,8 @@
         <!--rules="rules"绑定校验对象-->
         <!--ref 被用来给DOM元素或子组件注册引用信息-->
         <!--用户名-->
-        <el-form-item prop="name"><!--label表头,label-width="80px"占位--><!--prop指定规则--><!--prop绑定规则 el-form-item-->
-          <el-input prefix-icon="el-icon-user-solid" v-model="loginform.name"></el-input><!--v-model对象上具体属性-->
+        <el-form-item prop="username"><!--label表头,label-width="80px"占位--><!--prop指定规则--><!--prop绑定规则 el-form-item-->
+          <el-input  prefix-icon="el-icon-user-solid" v-model="loginform.username"></el-input><!--v-model对象上具体属性-->
           <!--v-model对象上具体属性-->
         </el-form-item>
         <!--密码-->
@@ -36,18 +36,20 @@ export default {
     return {
       // 表单绑定对象
       loginform: {
-        name: 'admin',
+        // 要用username而不是name，注意接口的数据，参数名一致
+        username: 'admin',
         password: '123456'
       },
       // 表单验证规则
       loginrules: {// 验证规则
-        name: [
+        username: [
+          // trigger触发验证时机
           {required: true, message: '请输入正确用户名', trigger: 'blur'},
           {min: 2, max: 5, message: '请输入正确用户名', trigger: 'blur'}
         ],
         password: [
           {required: true, message: '请输入正确密码', trigger: 'blur'},
-          {min: 2, max: 20, message: '请输入正确密码', trigger: 'blur'}
+          {min: 5, max: 20, message: '请输入正确密码', trigger: 'blur'}
         ]
       }
     }
@@ -63,7 +65,7 @@ export default {
       // 对整个表单进行校验的方法，参数为一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：是否校验成功和未通过校验的字段。若不传入回调函数，则会返回一个 promise
       this.$refs.loginformref.validate(async valid => {
         // console.log(valid);
-        if (!valid) return
+        if (!valid) return false
         // 发起登录请求
         // const result=this.$http.post('login',this.loginform) 返回promise
         const {data: result} = await this.$http.post('login', this.loginform)
@@ -76,7 +78,7 @@ export default {
           // message组件使用，Element 注册了一个$message方法用于调用
         } else {
           this.$message.success('登录成功')
-          console.log(result.data.token)
+          // console.log(result.data.token)
           // 保存token到sessionstore中
           window.sessionStorage.setItem('token', result.data.token)
           // 页面跳转
