@@ -32,6 +32,7 @@
               </template>
               <!--二级-->
               <!--item.children-->
+              <!--index跳转到-->
               <el-menu-item :index="'/'+children.path" v-for="children in item.children" :key="children.id"
               @click="activenavpath('/'+children.path)">
                 <template slot="title">
@@ -117,7 +118,7 @@ export default {
 
 <style scoped>
   .home{
-    height: 100%;
+    min-height: 100%;
   }
   .el-container{
     height: 100%;
