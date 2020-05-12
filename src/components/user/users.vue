@@ -165,9 +165,6 @@ export default {
         mobile: ''
       },
       modifyuserlist: [],
-      /* username: '',
-        email: '',
-        mobile: '' */
       // 新用户验证规则
       addnewuserrules: {
         username: [
@@ -195,7 +192,6 @@ export default {
     async getuserlist () {
       // params指定
       const {data: res} = await this.$http.get('users', {params: this.quaryinfo})
-      // console.log(res)
       if (res.meta.status !== 200) this.$message.error(res.data.msg)
       else {
         this.totalpage = res.data.total
@@ -204,17 +200,6 @@ export default {
         this.quaryinfo.pagenum = res.data.pagenum
       }
     },
-    /* handleSizeChange (newsize) {
-      // 需要修改当前数据
-      // size-change，pageSize改变时会触发，每页条数
-      // this.quaryinfo.pagesize = newsize
-      // .sync可以双向绑定
-      this.getuserlist()
-    },
-    handleCurrentChange (newpage) {
-      // this.quaryinfo.pagenum = newpage
-      this.getuserlist()
-    }, */
     // 查询操作
     async searchuser () {
       this.quaryinfo.pagenum = 1
