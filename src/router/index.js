@@ -4,6 +4,8 @@ import login from '@/components/login'
 import home from '@/components/home'
 import welcome from '@/components/welcome'
 import users from '@/components/user/users'
+import right from '@/components/power/right'
+import roles from '@/components/power/roles'
 Vue.use(Router)
 const router = new Router({
   routes: [
@@ -32,6 +34,17 @@ const router = new Router({
           path: '/users',
           name: 'users',
           component: users
+        }, // right在home展示，所以在home子路由中
+        // path不能乱写，要与点击权限列表后显示的路径http://localhost:8080/#/rights一致，否则不会显示
+        {
+          path: '/rights',
+          name: 'rights',
+          component: right
+        },
+        {
+          path: '/roles',
+          name: 'roles',
+          component: roles
         }
       ]
     }
