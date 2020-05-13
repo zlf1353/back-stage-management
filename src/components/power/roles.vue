@@ -41,18 +41,44 @@
           <template v-slot="scope">
             <!--class动态绑定,i1序号-->
             <el-row v-for="(item1,i1) in scope.row.children"
-            :key="item1.id"
-            :class="['bdbutton',i1 === 0 ? 'bdtop':'']">
+                    :key="item1.id"
+                    :class="['bdbutton',i1 === 0 ? 'bdtop':'']"
+                    style="display: flex;align-items: center">
               <!--一级-->
-              <el-col :span="5">
-                <el-tag closable>
+              <el-col :span="6">
+                <el-tag closable @close="deletedright(scope.row,item1.id)">
                   {{item1.authName}}
                 </el-tag>
                 <!--i用class-->
                 <i class="el-icon-caret-right"></i>
-              </el-col>
+              </el-col >
               <!--二级和三级-->
-              <el-col >
+              <el-col :span="18">
+                <!--二级-->
+                <el-row v-for="(item2,i2) in item1.children"
+                        :key="item2.id"
+                        :class="[i2 === 0 ? '':'bdtop']"
+                        style="display: flex;align-items: center">
+                  <el-col :span="6">
+                    <el-tag closable type="success"
+                            @close="deletedright(scope.row,item2.id)">
+                      {{item2.authName}}
+                    </el-tag>
+                      <i class="el-icon-caret-right"></i>
+                  </el-col>
+                  <!--每一个row都可以分为24块-->
+                  <el-col :span="18">
+                    <!--三级-->
+                    <el-col :span="6"
+                            v-for="(item3,i3) in item2.children"
+                            :key="item3.id">
+                      <el-tag closable type="warning"
+                              @close="deletedright(scope.row,item3.id)">
+                        {{item3.authName}}
+                      </el-tag>
+                    </el-col>
+                  </el-col>
+                </el-row>
               </el-col>
             </el-row>
           </template>
@@ -80,13 +106,32 @@
               </el-form>
               <span slot="footer">
                 <el-button @click="alterrolesVisible = false">取 消</el-button>
-                <el-button type="primary" @click="comitalterroles(scope.row.id)">确 定</el-button>
+                <el-button type="primary" @click="comitalterroles">确 定</el-button>
               </span>
             </el-dialog>
-            <!--删除角色提醒框-->
-            <el-button type="primary" icon="el-icon-edit" @click="alterroleswindow(scope.row.id)">\ 编辑</el-button>
+            <!--分配角色权限框-->
+            <el-dialog title="分配权限" :visible.sync="alterVisible"
+                       width="50%"
+                       @close="setrightdiaclosed">
+              <!--树形组件渲染所有权限 prop需要动态绑定-->
+              <!--node-key每个树节点用来作为唯一标识的属性，整棵树应该是唯一的-->
+              <!--default-expand-all是否默认展开所有节点-->
+              <!----><el-tree :data="userright"
+                              show-checkbox
+                              node-key="id"
+                              ref="treeref"
+                              :props="altertightProps"
+                              :default-checked-keys="defkeys"
+                              default-expand-all>
+            </el-tree>
+              <span slot="footer">
+                <el-button @click="alterVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submitrolerightbyid">确 定</el-button>
+              </span>
+            </el-dialog>
+            <el-button type="primary" icon="el-icon-edit" @click="alterroleswindow(scope.row.id)">编辑</el-button>
             <el-button type="danger" icon="el-icon-delete" @click="deletedrole(scope.row.id)">删除</el-button>
-            <el-button type="warning" icon="el-icon-s-tools">分配权限</el-button>
+            <el-button type="warning" icon="el-icon-s-tools" @click="alterright(scope.row)">分配权限</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -119,7 +164,20 @@ export default {
       // 修改用户
       alterrolesVisible: false,
       // 添加角色数据
-      alterrolesform: []
+      alterrolesform: [],
+      // 修改角色对话框显示与否
+      alterVisible: false,
+      // 所有权限
+      userright: [],
+      // 分配权限绑定的字段
+      altertightProps: {
+        children: 'children',
+        label: 'authName'
+      },
+      // 默认展开的节点
+      defkeys: [],
+      // 将要修改的角色的id
+      tobeelertroleid: ''
     }
   },
   methods: {
@@ -193,6 +251,67 @@ export default {
         this.$message.success(res.meta.msg)
         this.getrolerights()
       }
+    },
+    // 通过id删除权限
+    async deletedright (role, key) {
+      const confirms = await this.$confirm('此操作将永久删除该权限, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => err)
+      if (confirms !== 'confirm') return this.$message.error('取消删除')
+      const {data: res} = await this.$http.delete(`roles/${role.id}/rights/${key}`)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      else {
+        // 响应数据说明
+        // 返回的data, 是当前角色下最新的权限数据
+        this.$message.success(res.meta.msg)
+        // 防止expand收缩，所以引用scope.row
+        role.children = res.data
+      }
+    },
+    // 分配角色权限信息
+    async alterright (role) {
+      // 获取所有权限数据
+      this.tobeelertroleid = role.id
+      const {data: res} = await this.$http.get(`rights/tree`)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      else {
+        this.userright = res.data
+        this.alterVisible = true
+        this.getleafkey(role, this.defkeys)
+      }
+    },
+    // 通过递归的形式，获取角色下所有三级权限的id，保存到defkeys中
+    // node 判断是否是三级节点，arr保存路径
+    getleafkey (node, arr) {
+      if (!node.children) {
+        return arr.push(node.id)
+      }
+      node.children.forEach(item =>
+        this.getleafkey(item, arr)
+      )
+    },
+    // 提交修改的权限
+    async submitrolerightbyid () {
+      // 所有id
+      const treenode = [
+        // ...展开运算符
+        ...this.$refs.treeref.getCheckedKeys(),
+        ...this.$refs.treeref.getHalfCheckedKeys()
+      ]
+      const idstr = treenode.join(',')
+      const {data: res} = await this.$http.post(`roles/${this.tobeelertroleid}/rights`, {rids: idstr})
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      else {
+        this.$message.success(res.meta.msg)
+        this.getrolerights()
+        this.alterVisible = false
+      }
+    },
+    // 分配角色对话框关闭
+    setrightdiaclosed () {
+      this.defkeys = []
     }
   },
   // 注意生命周期函数不要包括到method里

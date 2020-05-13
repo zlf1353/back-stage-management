@@ -11,6 +11,7 @@ import './assets/css/global.css'
 // axios引入
 import axios from 'axios'
 axios.defaults.baseURL = 'http://119.23.53.78:8888/api/private/v1/'
+
 // login?username=admin&password=123456
 // axios拦截器,为每次请求挂载请求头
 // 需要授权的数据，必须在请求头挂在token

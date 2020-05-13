@@ -88,10 +88,32 @@
                 <el-button type="primary" @click="modifynewuser">确 定</el-button>
               </span>
           </el-dialog>
+            <!--分配用户角色对话框-->
+            <el-dialog title="分配角色"
+                       :visible.sync="modifyrightdialogVisible"
+                       width="50%"
+                       @close="selectedrole = ''">
+              <p>当前的用户：{{userinfo.username}}</p>
+              <p>当前的角色：{{userinfo.role_name}}</p>
+              <p>分配新角色：
+                <el-select v-model="selectedrole" placeholder="请选择">
+                  <el-option
+                    v-for="role in rolelist"
+                    :key="role.id"
+                    :label="role.roleName"
+                    :value="role.id">
+                  </el-option>
+                </el-select>
+              </p>
+              <span slot="footer">
+                <el-button @click="modifyrightdialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="modifyuserrole">确 定</el-button>
+              </span>
+            </el-dialog>
             <el-button type="primary" icon="el-icon-edit" @click="modifyuser(scope.row.id)"></el-button>
             <el-button type="danger" icon="el-icon-delete" @click="deleteuser(scope.row.id)"></el-button>
             <el-tooltip effect="dark" content="设置" placement="top">
-              <el-button type="warning" icon="el-icon-s-tools"></el-button>
+              <el-button type="warning" icon="el-icon-s-tools" @click="modifyuserright(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -184,7 +206,16 @@ export default {
           {required: true, message: '请输入正确手机号', trigger: 'blur'},
           { validator: checkmobie, trigger: 'blur' }
         ]
-      }
+      },
+      // 分配用户角色对话框
+      modifyrightdialogVisible: false,
+      // 用户角色列表
+      rolelist: [],
+      // 选定的角色
+      selectedrole: '',
+      // 需要被分配的用户角色信息
+      // v-model的值为当前被选中的el-option的 value 属性值
+      userinfo: {}
     }
   },
   methods: {
@@ -243,7 +274,6 @@ export default {
     async modifyuser (id) {
       this.modifyuserdialogVisible = true
       const {data: res} = await this.$http.get(`users/${id}`)
-      console.log(res)
       if (res.meta.status !== 200) {
         // 操作失败，不能改变状态值
         return this.$message.error(res.meta.msg)
@@ -298,6 +328,29 @@ export default {
     // 修改用户对话框关闭时，重新刷新表单
     modifydilogclosed () {
       this.$refs.modifyuseraddref.resetFields()
+    },
+    // 点击打开分配用户角色
+    async modifyuserright (user) {
+      this.userinfo = user
+      this.modifyrightdialogVisible = true
+      const {data: roleres} = await this.$http.get(`roles`)
+      if (roleres.meta.status !== 200) {
+        return this.$message.error(roleres.meta.msg)
+      } else {
+        this.rolelist = roleres.data
+      }
+    },
+    // 分配用户角色提交
+    async modifyuserrole () {
+      // 进行判断，是否选择角色
+      if (!this.selectedrole) return this.$message.error('请选择分配角色')
+      const {data: res} = await this.$http.put(`users/${this.userinfo.id}/role`, {rid: this.selectedrole})
+      if (res.meta.status !== 200) {
+        return this.$message.error('当前角色为超级管理员则不能修改')
+      }
+      this.$message.success(res.meta.msg)
+      this.modifyrightdialogVisible = false
+      this.getuserlist()
     }
   },
   created () {
