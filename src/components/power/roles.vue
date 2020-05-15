@@ -116,7 +116,7 @@
               <!--树形组件渲染所有权限 prop需要动态绑定-->
               <!--node-key每个树节点用来作为唯一标识的属性，整棵树应该是唯一的-->
               <!--default-expand-all是否默认展开所有节点-->
-              <!----><el-tree :data="userright"
+              <el-tree :data="userright"
                               show-checkbox
                               node-key="id"
                               ref="treeref"
