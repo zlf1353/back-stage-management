@@ -45,7 +45,7 @@ export default {
         username: [
           // trigger触发验证时机
           {required: true, message: '请输入正确用户名', trigger: 'blur'},
-          {min: 2, max: 5, message: '请输入正确用户名', trigger: 'blur'}
+          {min: 2, max: 10, message: '请输入正确用户名', trigger: 'blur'}
         ],
         password: [
           {required: true, message: '请输入正确密码', trigger: 'blur'},

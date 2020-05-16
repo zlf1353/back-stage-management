@@ -23,7 +23,8 @@
             <el-cascader :options="toselectedgoodlist" clearable
                          v-model="seletedsortid"
                          :props="cateprops"
-                         @change="changeseletedstage"></el-cascader>
+                         @change="changeseletedstage">
+            </el-cascader>
           </el-form-item>
         </el-form>
         <span slot="footer">
@@ -75,27 +76,6 @@
           <el-button type="danger" icon="el-icon-delete-solid" @click="deletedsortbyid(scope.row)">删除</el-button>
         </template>
       </tree-table>
-      <!--<el-table  :data="goodlist" stripe>
-        <el-table-column type="index" label="#" width="60px"></el-table-column>
-        <el-table-column prop="cat_name" label="分类名称"></el-table-column>
-        <el-table-column prop="cat_deleted" label="是否有效">
-          <template v-slot="scope">
-          </template>
-        </el-table-column>
-        <el-table-column prop="cat_level" label="排序">
-          <template v-slot="scope">
-            <el-tag v-if="scope.row.cat_level===0">一级</el-tag>
-            <el-tag v-else-if="scope.row.cat_level===1" type="success">二级</el-tag>
-            <el-tag v-else-if="scope.row.cat_level===2" type="warning">三级</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作">
-          <template v-slot="scope">
-            <el-button type="primary" icon="el-icon-edit">编辑</el-button>
-            <el-button type="danger" icon="el-icon-delete-solid">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>-->
       <!--页面跳转区域-->
       <!--@.sync双向绑定，不需要this-->
       <el-pagination
