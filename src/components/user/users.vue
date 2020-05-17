@@ -14,7 +14,7 @@
         <el-col :span="12">
           <!--clearable是否可清空-->
           <el-input placeholder="请输入用户名查询" v-model="quaryinfo.query" clearable @clear="getuserlist">
-            <el-button slot="append" icon="el-icon-search" @click="searchuser(quaryinfo.query)"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="searchuser"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4" >
@@ -232,7 +232,7 @@ export default {
       }
     },
     // 查询操作
-    async searchuser () {
+    searchuser () {
       this.quaryinfo.pagenum = 1
       this.getuserlist()
     },
