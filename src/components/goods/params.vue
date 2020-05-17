@@ -28,8 +28,27 @@
             <!--expand展开-->
             <el-table-column width="60px" type="expand">
               <template v-slot="scope">
-                <el-tag closable >
+                <!--循环展示标签-->
+                <!--@item不需要[i1]-->
+                <el-tag closable  v-for="(item1,i) in scope.row.attr_vals"
+                        :key="i"
+                        style="margin-left: 7px"
+                        @close="taghandleClose(i,scope.row)">
+                  {{item1}}
                 </el-tag>
+                <!--输入文本框-->
+                <!--keyup-键盘输入，enter回车,native修饰符触发事件（第三方标签绑定事件不生效）-->
+                <el-input
+                  class="input-new-tag"
+                  v-if="scope.row.inputVisible"
+                  v-model="scope.row.inputValue"
+                  type="small"
+                  ref="TagInput"
+                  @keyup.enter.native="handleInputConfirm(scope.row)"
+                  @blur="handleInputConfirm(scope.row)">
+                </el-input>
+                <!--添加按钮-->
+                <el-button  v-else @click="showInput(scope.row)" type="small">+ New Tag</el-button>
               </template>
             </el-table-column>
             <el-table-column label="#" width="60px" type="index"></el-table-column>
@@ -47,10 +66,30 @@
           <!--静态属性列表区-->
           <el-table :data="onlyattributeget">
             <!--expand展开-->
+            <!--expand展开-->
             <el-table-column width="60px" type="expand">
               <template v-slot="scope">
-                <el-tag closable >
+                <!--循环展示标签-->
+                <!--@item不需要[i1]-->
+                <el-tag closable  v-for="(item1,i) in scope.row.attr_vals"
+                        :key="i"
+                        style="margin-left: 7px"
+                        @close="taghandleClose(i,scope.row)">
+                  {{item1}}
                 </el-tag>
+                <!--输入文本框-->
+                <!--keyup-键盘输入，enter回车,native修饰符触发事件（第三方标签绑定事件不生效）-->
+                <el-input
+                  class="input-new-tag"
+                  v-if="scope.row.inputVisible"
+                  v-model="scope.row.inputValue"
+                  type="small"
+                  ref="TagInput"
+                  @keyup.enter.native="handleInputConfirm(scope.row)"
+                  @blur="handleInputConfirm(scope.row)">
+                </el-input>
+                <!--添加按钮-->
+                <el-button  v-else @click="showInput(scope.row)" type="small">+ New Tag</el-button>
               </template>
             </el-table-column>
             <el-table-column label="#" width="60px" type="index"></el-table-column>
@@ -188,6 +227,15 @@ export default {
       if (this.seletedsortid.length) {
         const {data: res} = await this.$http.get(`categories/${this.seletedsortid[2]}/attributes`, {params: {sel: this.activeName}})
         if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+        // forEach 大写
+        res.data.forEach(item => {
+          // ' '.split(' ')产生空数组,一个空格
+          item.attr_vals = item.attr_vals ? (item.attr_vals).split(' ') : []
+          // 为每行定义属性，控制对话框的显示与否
+          item.inputVisible = false
+          // 文本框内容
+          item.inputValue = ''
+        })
         if (this.activeName === 'many') {
           this.manyattributeget = res.data
         } else {
@@ -233,6 +281,47 @@ export default {
         this.$message.success(res.meta.msg)
         this.getparmesdata()
       }
+    },
+    // 标签显示框的显示与否
+    showInput (row) {
+      row.inputVisible = true
+      // 自动将焦点聚集到文本框
+      // $nexttick 作用：当页面上元素被重新渲染之后，才会指定回调函数的代码
+      // 先生成input
+      this.$nextTick(_ => {
+        this.$refs.TagInput.$refs.input.focus()
+      })
+    },
+    // 标签页输入确定的时候
+    async handleInputConfirm (row) {
+      // !!row.inputValue 不能剔除全部是空格的情况
+      if (row.inputValue.trim().length === 0) {
+        // 隐藏文本输入框
+        row.inputVisible = false
+        row.inputValue = ''
+        return false
+      }
+      // @先清空、
+      // 传递参数需要加空格，注意格式
+      row.attr_vals.push(row.inputValue.trim())
+      row.inputVisible = false
+      row.inputValue = ''
+      this.saveattrcalue(row)
+    },
+    // 函数删除参数
+    async saveattrcalue (row) {
+      const {data: res} = await this.$http.put(`categories/${this.seletedsortid[2]}/attributes/${row.attr_id}`, {
+        attr_name: row.attr_name, attr_sel: this.activeName, attr_vals: row.attr_vals.join(' ')
+      })
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.$message.success(res.meta.msg)
+    },
+    // 删除标签
+    async taghandleClose (i, row) {
+      // @splice名字写错
+      // @使用的应该是put而不是deleted
+      row.attr_vals.splice(i, 1)
+      this.saveattrcalue(row)
     }
   },
   created () {
@@ -251,5 +340,8 @@ export default {
 </script>
 
 <style scoped>
-
+  .input-new-tag {
+    width: 90px;
+    margin-left: 15px;
+  }
 </style>
