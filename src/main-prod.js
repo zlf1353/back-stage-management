@@ -3,9 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import ElementUI from 'element-ui'
+// import ElementUI from 'element-ui'
 import treetable from 'vue-table-with-tree-grid'
-import 'element-ui/lib/theme-chalk/index.css'
+// import 'element-ui/lib/theme-chalk/index.css'
 // 全局样式需要导入
 import './assets/css/global.css'
 // axios引入
@@ -23,7 +23,7 @@ axios.interceptors.request.use(config => {
 // 每个组件都可以使用$http
 Vue.prototype.$http = axios
 
-Vue.use(ElementUI)
+// Vue.use(ElementUI)
 Vue.component('tree-table', treetable)
 Vue.config.productionTip = false
 

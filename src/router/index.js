@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import login from '@/components/login'
+/* import login from '@/components/login'
 import home from '@/components/home'
 import welcome from '@/components/welcome'
 import users from '@/components/user/users'
@@ -8,11 +8,30 @@ import right from '@/components/power/right'
 import roles from '@/components/power/roles'
 import categories from '@/components/goods/categories'
 import params from '@/components/goods/params'
+
 import list from '@/components/goods/list'
 import add from '@/components/goods/add'
-import reports from '@/components/report/reports'
+
+import reports from '@/components/report/reports' */
+
 import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
+
+const login = () => import(/* webpackChunkName: "login_home_welcome" */ '@/components/login')
+const home = () => import(/* webpackChunkName: "login_home_welcome" */ '@/components/home')
+const welcome = () => import(/* webpackChunkName: "login_home_welcome" */ '@/components/welcome')
+
+const users = () => import(/* webpackChunkName: "users_right_roles" */ '@/components/user/users')
+const right = () => import(/* webpackChunkName: "users_right_roles" */ '@/components/power/right')
+const roles = () => import(/* webpackChunkName: "users_right_roles" */ '@/components/power/roles')
+
+const categories = () => import(/* webpackChunkName: "categories_params" */ '@/components/goods/categories')
+const params = () => import(/* webpackChunkName: "categories_params" */ '@/components/goods/params')
+
+const list = () => import(/* webpackChunkName: "list_add" */ '@/components/goods/list')
+const add = () => import(/* webpackChunkName: "list_add" */ '@/components/goods/add')
+
+const reports = () => import(/* webpackChunkName: "reports" */ '@/components/report/reports')
+// import 'nprogress/nprogress.css'
 Vue.use(Router)
 const router = new Router({
   routes: [

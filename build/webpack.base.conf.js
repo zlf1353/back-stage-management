@@ -20,6 +20,19 @@ const createLintingRule = () => ({
 })
 
 module.exports = {
+  externals:{
+    // 过 webpack 的 externals 节点，来配置并加载外部的 CDN 资源。
+    // 凡是声明在 externals 中的第三方依赖包，都不会被打包。
+    // 这样就可以有效的减少单文件的体积。
+    // cdn 包的名字、
+    // 其中参数2对象中是键为依赖包的名字。值为使用Window全局的某个对象
+    vue: 'Vue',
+    /*'vue-router': 'Router',*/
+    axios: 'axios',
+    lodash: '_',
+    echarts: 'echarts',
+    nprogress: 'NProgress'
+  },
   context: path.resolve(__dirname, '../'),
   entry: {
     app: './src/main-prod.js'
