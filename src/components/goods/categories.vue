@@ -206,7 +206,7 @@ export default {
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       else {
         // 注意返回的参数
-        // console.log(res)
+        console.log(res)
         this.goodlist = res.data.result
         this.totallistnumber = res.data.total
       }

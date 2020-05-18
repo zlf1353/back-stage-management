@@ -18,7 +18,7 @@
           </el-input>
         </el-col>
         <el-col :span="6" >
-          <el-button type="primary" @click="goaddpage">添加用户</el-button>
+          <el-button type="primary" @click="goaddpage">添加商品</el-button>
         </el-col>
       </el-row>
       <!--绑定数据，生成卡片-->
@@ -133,7 +133,7 @@ export default {
       this.getgoodlist()
     },
     // 跳转到添加商品页面
-    goaddpage(){
+    goaddpage () {
       this.$router.push('/goods/add')
     }
   },

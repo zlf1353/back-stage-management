@@ -11,6 +11,8 @@ import params from '@/components/goods/params'
 import list from '@/components/goods/list'
 import add from '@/components/goods/add'
 import reports from '@/components/report/reports'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 Vue.use(Router)
 const router = new Router({
   routes: [
@@ -92,7 +94,12 @@ router.beforeEach((to, from, next) => {
   const tokenstr = window.sessionStorage.getItem('token')
   // 强制转换
   if (!tokenstr) return next('/login')
+  NProgress.start()
   next()
+})
+// 使用进度条  NProgress.start() 展示 NProgress.done() 隐藏
+router.afterEach(() => {
+  NProgress.done()
 })
 
 export default router

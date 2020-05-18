@@ -70,7 +70,7 @@
                   <el-col :span="18">
                     <!--三级-->
                     <el-col :span="6"
-                            v-for="(item3,i3) in item2.children"
+                            v-for="item3 in item2.children"
                             :key="item3.id">
                       <el-tag closable type="warning"
                               @close="deletedright(scope.row,item3.id)">
