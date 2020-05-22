@@ -69,7 +69,7 @@
       <!--page-sizes接受一个整型数组，数组元素为展示的选择每页显示个数的选项-->
       <!--:-v;bind-d单项绑定，数据到视图-->
       <el-pagination
-        @size-change="getgoodlist"
+        @size-change="searchgood"
         @current-change="getgoodlist"
         :current-page.sync="quaryinfo.pagenum"
         :page-sizes="[2, 5, 10,15]"
@@ -106,7 +106,6 @@ export default {
       const {data: res} = await this.$http.get('goods', {params: this.quaryinfo})
       if (res.meta.status !== 200) this.$message.error(res.data.msg)
       else {
-        console.log(res.data)
         this.totalpage = res.data.total
         this.goodlist = res.data.goods
         this.quaryinfo.pagenum = res.data.pagenum
@@ -114,7 +113,6 @@ export default {
     },
     // 查询操作
     searchgood () {
-      console.log('dsd')
       this.quaryinfo.pagenum = 1
       this.getgoodlist()
     },
