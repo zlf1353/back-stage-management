@@ -15,7 +15,7 @@ import add from '@/components/goods/add'
 import reports from '@/components/report/reports' */
 
 import NProgress from 'nprogress'
-
+// 懒加载
 const login = () => import(/* webpackChunkName: "login_home_welcome" */ '@/components/login')
 const home = () => import(/* webpackChunkName: "login_home_welcome" */ '@/components/home')
 const welcome = () => import(/* webpackChunkName: "login_home_welcome" */ '@/components/welcome')
@@ -30,7 +30,8 @@ const params = () => import(/* webpackChunkName: "categories_params" */ '@/compo
 const list = () => import(/* webpackChunkName: "list_add" */ '@/components/goods/list')
 const add = () => import(/* webpackChunkName: "list_add" */ '@/components/goods/add')
 
-const reports = () => import(/* webpackChunkName: "reports" */ '@/components/report/reports')
+const reports = () => import(/* webpackChunkName: "reports_orders" */ '@/components/report/reports')
+const orders = () => import(/* webpackChunkName: "reports_orders" */ '@/components/order/orders')
 // import 'nprogress/nprogress.css'
 Vue.use(Router)
 const router = new Router({
@@ -96,6 +97,11 @@ const router = new Router({
           path: '/reports',
           name: 'reports',
           component: reports
+        },
+        {
+          path: '/orders',
+          name: 'orders',
+          component: orders
         }
       ]
     }

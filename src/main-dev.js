@@ -13,7 +13,7 @@ import axios from 'axios'
 // 路径
 axios.defaults.baseURL = 'http://119.23.53.78:8888/api/private/v1/'
 // axios拦截器,为每次请求挂载请求头
-// request 请求拦截器 use挂载回调函数 config请求对象
+// request 请求拦截器 use挂载回调函数 config请求对象https://www.liulongbin.top:8888/api/private/v1/
 axios.interceptors.request.use(config => {
   // 需要授权的 API ，必须在请求头中使用 Authorization 字段提供 token 令牌
   config.headers.Authorization = window.sessionStorage.getItem('token')
