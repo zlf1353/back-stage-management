@@ -51,7 +51,7 @@
       <el-table :data="userlist" stripe style="width: 100%">
         <!--序号列-->
         <el-table-column type="index" label="#"></el-table-column>
-        <el-table-column prop="username" label="用户名" width="140"></el-table-column>
+        <el-table-column prop="username" label="用户名" width="140px"></el-table-column>
         <el-table-column prop="email" label="邮箱" width="140"></el-table-column>
         <el-table-column prop="role_name" label="角色名称" width="140"></el-table-column>
         <el-table-column prop="mobile" label="电话" width="140"></el-table-column>
