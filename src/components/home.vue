@@ -19,6 +19,7 @@
                @click="toggleglass">|||</div>
           <!--bool值动态绑定-->
           <!--router是否使用 vue-router 的模式，启用该模式会在激活导航时以 index 作为 path 进行路由跳转-->
+          <!--unique-opened 是否只保持一个子菜单的展开-->
           <el-menu background-color="#D3DCE6"
                    active-text-color="#6CA6CD"
                    unique-opened
@@ -30,8 +31,8 @@
             <!--双层for循环建立菜单-->
             <!--:key动态 绑定唯一属性-->
             <!--+''转化为字符串-->
-            <el-submenu :index="item.id +''"
-                        v-for="item in menulist"
+            <el-submenu v-for="item in menulist"
+                        :index="item.id +''"
                         :key="item.id">
               <template slot="title">
                 <!--图标-->

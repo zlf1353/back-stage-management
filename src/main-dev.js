@@ -39,7 +39,7 @@ Vue.filter('dataformat', function (originval) {
   const sec = (dt.getSeconds() + '').padStart(2, '0')
   return `${y}-${m}-${d} ${h}:${min}:${sec}`
 })
-new Vue({
+Vue({
   el: '#app',
   router,
   components: { App },
