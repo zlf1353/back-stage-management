@@ -7,20 +7,25 @@
       <el-breadcrumb-item>商品分类</el-breadcrumb-item>
     </el-breadcrumb>
     <!--卡片区域-->
-    <el-card shadow="hover" style="line-height: 35px;text-align: left" >
+    <el-card shadow="hover"
+             style="line-height: 35px;text-align: left">
       <!--添加分类对话框-->
-      <el-dialog title="添加分类" :visible.sync="addsortVisible"
+      <el-dialog title="添加分类"
+                 :visible.sync="addsortVisible"
                  width="50%"
                  @close="addsortclosed">
-        <el-form ref="addsortformref" label-width="80px"
+        <el-form ref="addsortformref"
+                 label-width="80px"
                  :model="addrolesform"
                  :rules="sortsrules"
                  label-position="left">
-          <el-form-item label="分类名称" prop="cat_name">
+          <el-form-item label="分类名称"
+                        prop="cat_name">
             <el-input v-model="addrolesform.cat_name"></el-input>
           </el-form-item>
           <el-form-item label="父级分类">
-            <el-cascader :options="toselectedgoodlist" clearable
+            <el-cascader :options="toselectedgoodlist"
+                         clearable
                          v-model="seletedsortid"
                          :props="cateprops"
                          @change="changeseletedstage">
@@ -29,63 +34,81 @@
         </el-form>
         <span slot="footer">
           <el-button @click="addsortVisible = false">取 消</el-button>
-          <el-button type="primary" @click="comitaddsort">确 定</el-button>
+          <el-button type="primary"
+                     @click="comitaddsort">确 定</el-button>
         </span>
       </el-dialog>
       <!--修改分类对话框-->
-      <el-dialog title="修改分类" :visible.sync="editsortVisible"
+      <el-dialog title="修改分类"
+                 :visible.sync="editsortVisible"
                  width="50%"
                  @close="editsortclosed">
-        <el-form ref="edisortform" label-width="80px"
+        <el-form ref="edisortform"
+                 label-width="80px"
                  :model="edisortform"
                  :rules="sortsrules"
                  label-position="left">
-          <el-form-item label="分类名称" prop="cat_name">
+          <el-form-item label="分类名称"
+                        prop="cat_name">
             <el-input v-model="edisortform.cat_name"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer">
-                <el-button @click="editsortVisible = false">取 消</el-button>
-                <el-button type="primary" @click="comiteditsort">确 定</el-button>
-              </span>
+          <el-button @click="editsortVisible = false">取 消</el-button>
+          <el-button type="primary"
+                     @click="comiteditsort">确 定</el-button>
+        </span>
       </el-dialog>
       <!--添加分类按钮-->
       <el-row>
         <el-col>
-          <el-button type="primary" @click="getparentcatelist">添加分类</el-button>
+          <el-button type="primary"
+                     @click="getparentcatelist">添加分类</el-button>
         </el-col>
       </el-row>
       <!--信息区域-->
       <!--false为bool值，需要:实现绑定-->
-      <tree-table :data="goodlist" :columns="columns" :selection-type="false"
+      <tree-table :data="goodlist"
+                  :columns="columns"
+                  :selection-type="false"
                   :expand-type="false"
                   style="margin-top: 15px"
                   show-index>
-        <template slot="isok" slot-scope="scope">
-          <i class="el-icon-success" v-if="!scope.row.cat_deleted"
-          style="color: lightgreen"></i>
-          <i class="el-icon-error" v-else-if="scope.row.cat_deleted"></i>
+        <template slot="isok"
+                  slot-scope="scope">
+          <i class="el-icon-success"
+             v-if="!scope.row.cat_deleted"
+             style="color: lightgreen"></i>
+          <i class="el-icon-error"
+             v-else-if="scope.row.cat_deleted"></i>
         </template>
-        <template slot="level" slot-scope="scope">
+        <template slot="level"
+                  slot-scope="scope">
           <el-tag v-if="scope.row.cat_level===0">一级</el-tag>
-          <el-tag v-else-if="scope.row.cat_level===1" type="success">二级</el-tag>
-          <el-tag v-else-if="scope.row.cat_level===2" type="warning">三级</el-tag>
+          <el-tag v-else-if="scope.row.cat_level===1"
+                  type="success">二级</el-tag>
+          <el-tag v-else-if="scope.row.cat_level===2"
+                  type="warning">三级</el-tag>
         </template>
-        <template slot="action" slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit" @click="getsortbyid(scope.row)">编辑</el-button>
-          <el-button type="danger" icon="el-icon-delete-solid" @click="deletedsortbyid(scope.row)">删除</el-button>
+        <template slot="action"
+                  slot-scope="scope">
+          <el-button type="primary"
+                     icon="el-icon-edit"
+                     @click="getsortbyid(scope.row)">编辑</el-button>
+          <el-button type="danger"
+                     icon="el-icon-delete-solid"
+                     @click="deletedsortbyid(scope.row)">删除</el-button>
         </template>
       </tree-table>
       <!--页面跳转区域-->
       <!--@.sync双向绑定，不需要this-->
-      <el-pagination
-        @size-change="getallsort"
-        @current-change="getallsort"
-        :current-page.sync="getcategories.pagenum"
-        :page-sizes="[2, 5, 10, 15]"
-        :page-size.sync="getcategories.pagesize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="totallistnumber">
+      <el-pagination @size-change="getallsort"
+                     @current-change="getallsort"
+                     :current-page.sync="getcategories.pagenum"
+                     :page-sizes="[2, 5, 10, 15]"
+                     :page-size.sync="getcategories.pagesize"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     :total="totallistnumber">
       </el-pagination>
     </el-card>
   </div>
@@ -108,7 +131,7 @@ export default {
       },
       // 添加分类约束
       sortsrules: {
-        cat_name: {required: true, message: '请输入名称', trigger: 'blur'}
+        cat_name: { required: true, message: '请输入名称', trigger: 'blur' }
       },
       // 查询商品分类
       getcategories: {
@@ -122,21 +145,21 @@ export default {
       totallistnumber: 1,
       // 为table指定列的定义
       columns: [
-        {label: '分类名称', prop: 'cat_name'},
-        {prop: 'cat_deleted',
+        { label: '分类名称', prop: 'cat_name' },
+        {          prop: 'cat_deleted',
           label: '是否有效',
           // 当前列定义为模板列
           type: 'template',
           // 对应的作用域插槽名称
-          template: 'isok'},
-        {prop: 'cat_level',
+          template: 'isok'        },
+        {          prop: 'cat_level',
           label: '排序',
           type: 'template',
           template: 'level'
         },
-        {label: '操作',
+        {          label: '操作',
           type: 'template',
-          template: 'action'}
+          template: 'action'        }
       ],
       // 修改分类对话框
       editsortVisible: false,
@@ -176,7 +199,7 @@ export default {
     comitaddsort () {
       this.$refs.addsortformref.validate(async valid => {
         if (!valid) return false
-        const {data: res} = await this.$http.post(`categories`, this.addrolesform)
+        const { data: res } = await this.$http.post(`categories`, this.addrolesform)
         if (res.meta.status !== 201) return this.$message.error(res.meta.msg)
         else {
           this.$message.success(res.meta.msg)
@@ -190,7 +213,7 @@ export default {
       this.$refs.edisortform.validate(async valid => {
         if (!valid) return false
         // console.log(this.edisortform.id)
-        const {data: res} = await this.$http.put(`categories/${this.edisortform.id}`, {cat_name: this.edisortform.cat_name})
+        const { data: res } = await this.$http.put(`categories/${this.edisortform.id}`, { cat_name: this.edisortform.cat_name })
         if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
         else {
           // 注意返回的参数
@@ -202,7 +225,7 @@ export default {
     // 获取所有商品分类
     async getallsort () {
       // param() 方法创建数组或对象的序列化表示形式。在需要页脚的时候使用
-      const {data: res} = await this.$http.get('categories', {params: this.getcategories})
+      const { data: res } = await this.$http.get('categories', { params: this.getcategories })
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       else {
         // 注意返回的参数
@@ -227,7 +250,7 @@ export default {
       }).catch(err => err)
       // @deleted路径错误，没注意文档
       if (confirms !== 'confirm') return this.$message.error('取消删除')
-      const {data: res} = await this.$http.delete(`categories/${sort.cat_id}`)
+      const { data: res } = await this.$http.delete(`categories/${sort.cat_id}`)
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       else {
         this.$message.success(res.meta.msg)
@@ -236,7 +259,7 @@ export default {
     },
     // 获取父级分类的数据列表
     async getparentcatelist () {
-      const {data: res} = await this.$http.get('categories', {params: {type: 2}})
+      const { data: res } = await this.$http.get('categories', { params: { type: 2 } })
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       // console.log(res.data)
       this.toselectedgoodlist = res.data
@@ -260,5 +283,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

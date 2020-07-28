@@ -174,7 +174,7 @@
                      :page-sizes="[2, 4, 10,15]"
                      :page-size.sync="quaryinfo.pagesize"
                      layout="total, sizes, prev, pager, next, jumper"
-                     :total.sync="totalpage">
+                     :total="totalpage">
       </el-pagination>
     </el-card>
   </div>

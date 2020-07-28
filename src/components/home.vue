@@ -36,7 +36,7 @@
                         :key="item.id">
               <template slot="title">
                 <!--图标-->
-                <i :class=iconobj[item.id]></i>
+                <i :class="iconobj[item.id]"></i>
                 <!--文本-->
                 <span>{{item.authName}}</span>
               </template>

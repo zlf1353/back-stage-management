@@ -24,7 +24,6 @@
           <el-input prefix-icon="el-icon-user-solid"
                     v-model="loginform.username"></el-input>
           <!--v-model对象上具体属性-->
-          <!--v-model对象上具体属性-->
         </el-form-item>
         <!--密码-->
         <el-form-item prop="password">
